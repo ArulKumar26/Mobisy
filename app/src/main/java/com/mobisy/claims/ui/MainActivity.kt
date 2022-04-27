@@ -10,12 +10,14 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.mobisy.claims.BR
 import com.mobisy.claims.R
 import com.mobisy.claims.data.model.*
 import com.mobisy.claims.databinding.ActivityMainBinding
+import com.mobisy.claims.extensions.isNullOrEmpty
 import com.mobisy.claims.extensions.launchActivity
-import com.mobisy.claims.extensions.margin
 import com.mobisy.claims.extensions.selected
 import com.mobisy.claims.extensions.showMessage
 import com.mobisy.claims.utils.*
@@ -61,7 +63,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
         return super.onOptionsItemSelected(item)
     }
-
     /**
      * Get the data from json file
      */
@@ -83,7 +84,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     @SuppressLint("InflateParams")
     private fun createClaimsType(claimData: ArrayList<ClaimType>) {
         if (claimData.isNullOrEmpty()) return
-
+        createClaimDate()
         // Create Layout for dynamic form
         rootView = LinearLayout(this)
         rootView.layoutParams =
@@ -99,18 +100,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         spinner?.tag = "claim_type"
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_dropdown_item,
+            R.layout.spinner_item,
             claimData
         )
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spinner?.adapter = adapter
+
         mainBinding.llRoot.addView(spinner)
         spinner?.selected { _, _, position, _ ->
             rootView.removeAllViews()
             //Create view based on claim type
             createViews(position)
         }
-
-        createClaimDate()
     }
 
     /**
@@ -125,7 +126,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         val claimDateValue = layoutInflater.inflate(R.layout.widget_textview, null) as TextView?
         claimDateValue?.apply {
             text = DateTimeUtils.getTodayDate()
-            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.purple_500))
+            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
             setTypeface(claimDateValue.typeface, Typeface.BOLD)
             textSize = 15f
             mainBinding.llRoot.addView(this)
@@ -136,6 +137,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
      * Create layout based on claim type
      */
     private fun createViews(position: Int) {
+        if (position < 0) return
         claims = claimData[position]
         getDependentItem()
         claims.claimtypedetail.forEachIndexed { index, claimTypeDetail ->
@@ -168,9 +170,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         spinner?.tag = claimField.id
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_dropdown_item,
+            R.layout.spinner_item,
             claimField.claimfieldoption
         )
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spinner?.adapter = adapter
         rootView.addView(spinner)
         spinner?.selected { _, _, _, _ ->
@@ -199,10 +202,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         dependantSpinner?.tag = claimField?.id
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_dropdown_item,
+            R.layout.spinner_item,
             claimFieldOption
         )
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         dependantSpinner?.adapter = adapter
+
         val spinner =
             rootView.findViewWithTag(claimTypeDetail.claimfield?.id) as Spinner?
         if (spinner?.parent != null) {
@@ -251,16 +256,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
      * Create text field based on claim type
      */
     @SuppressLint("InflateParams")
-    private fun createEditText(it: ClaimTypeDetail) {
-        val editText =
-            layoutInflater.inflate(R.layout.widget_edittext, null) as EditText?
-        editText?.apply {
-            margin(top = 15f)
-            tag = it.claimfield?.id
-            hint = it.claimfield?.label
-            inputType = getInputType(it.claimfield?.type)
+    private fun createEditText(claimTypeDetail: ClaimTypeDetail) {
+        val textInputLayout =
+            layoutInflater.inflate(R.layout.widget_textinput_layout, null) as TextInputLayout?
+        textInputLayout?.tag = claimTypeDetail.claimfield?.id
+        val mParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        mParams.setMargins(0, 15, 0, 0)
+        textInputLayout?.layoutParams = mParams
+        val textInputEditText =
+            layoutInflater.inflate(R.layout.widget_textinput, null) as TextInputEditText?
+        textInputEditText?.apply {
+            hint = setHint(
+                claimTypeDetail.claimfield?.label,
+                claimTypeDetail.claimfield?.required?.toInt()
+            )
+            inputType = getInputType(claimTypeDetail.claimfield?.type)
             isSingleLine = true
-            if (it.claimfield?.type.equals(
+            if (claimTypeDetail.claimfield?.type.equals(
                     WIDGET_EDIT_TEXT_ALL_CAPS,
                     ignoreCase = true
                 )
@@ -269,7 +284,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     arrayOf<InputFilter>(InputFilter.AllCaps())
             }
         }
-        rootView.addView(editText)
+        textInputLayout?.addView(textInputEditText)
+        rootView.addView(textInputLayout)
+    }
+
+    private fun setHint(hintValue: String?, mandatory: Int?): String {
+        var hint = hintValue ?: ""
+        mandatory?.let { required ->
+            if (required == 1)
+                hint += " *"
+        }
+        return hint
     }
 
     /**
@@ -279,15 +304,54 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private fun createButton() {
         val button = layoutInflater.inflate(R.layout.widget_button, null) as Button
         with(button) {
-            margin(top = 25f)
+            val mParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            mParams.setMargins(0, 25, 0, 25)
+            layoutParams = mParams
             text = getString(R.string.add_claim)
             setOnClickListener {
-                val resultData = getDataFromView()
-                resultData?.let { mainViewModel.insertClaims(it) }
-                showMessage("Claim Item saved successfully !")
+                val validationStatus = doValidation()
+                if (validationStatus) {
+                    val resultData = getDataFromView()
+                    resultData?.let { mainViewModel.insertClaims(it) }
+                    showMessage("Claim Item saved successfully !")
+                }
             }
         }
         rootView.addView(button)
+    }
+
+    fun doValidation(): Boolean {
+        claims.claimtypedetail.forEach { claimTypeDetail ->
+            when (claimTypeDetail.claimfield?.type) {
+                WIDGET_EDIT_TEXT_ALL_CAPS, WIDGET_EDIT_TEXT_NUMERIC, WIDGET_EDIT_TEXT_SINGLE_LINE -> {
+                    val inputLayout =
+                        rootView.findViewWithTag(claimTypeDetail.claimfield?.id) as TextInputLayout
+                    val value = inputLayout.editText?.text.toString()
+                    if (claimTypeDetail.claimfield?.required.equals("1")) {
+                        if (isNullOrEmpty(value)) {
+                            inputLayout.error = getString(R.string.field_can_not_empty)
+                            inputLayout.requestFocus()
+                            return false
+                        } else inputLayout.error = null
+                    }
+                }
+                WIDGET_SPINNER -> {
+                    val spinner =
+                        rootView.findViewWithTag(claimTypeDetail.claimfield?.id) as Spinner
+                    val selectedItem = spinner.selectedItem as ClaimFieldOption
+                    if (claimTypeDetail.claimfield?.required.equals("1")) {
+                        if (isNullOrEmpty(selectedItem.toString())) {
+                            showMessage(getString(R.string.field_can_not_empty))
+                            return false
+                        }
+                    }
+                }
+            }
+        }
+        return true
     }
 
     private fun getDataFromView(): ResultClaimData? {
@@ -303,10 +367,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         claims.claimtypedetail.forEach { claimTypeDetail ->
             when (claimTypeDetail.claimfield?.type) {
                 WIDGET_EDIT_TEXT_ALL_CAPS, WIDGET_EDIT_TEXT_NUMERIC, WIDGET_EDIT_TEXT_SINGLE_LINE -> {
-                    val edit = rootView.findViewWithTag(claimTypeDetail.claimfield?.id) as EditText
+                    val inputLayout =
+                        rootView.findViewWithTag(claimTypeDetail.claimfield?.id) as TextInputLayout
                     val resultClaimTypeOption = ResultClaimTypeOption().apply {
-                        enteredValueId = edit.tag?.toString()
-                        enteredValue = edit.text?.toString()
+                        enteredValueId = inputLayout.tag?.toString()
+                        enteredValue = inputLayout.editText?.text?.toString()
                     }
                     resultClaimData.claimFieldoption.add(resultClaimTypeOption)
                 }

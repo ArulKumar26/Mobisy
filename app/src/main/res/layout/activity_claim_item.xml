@@ -5,12 +5,23 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.mobisy.claims.ui.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.ClaimItemActivity">
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:text="@string/no_data_found"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_claims"

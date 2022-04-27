@@ -40,8 +40,16 @@ class ClaimItemActivity : BaseActivity<ActivityClaimItemBinding, MainViewModel>(
             when (it.status) {
                 Status.SUCCESS -> {
                     claimBinding.progressBar.gone()
-                    claimBinding.rvClaims.show()
-                    it.data?.let { claims -> renderList(claims) }
+                    it.data?.let { claims ->
+                        if(claims.isNullOrEmpty()){
+                            claimBinding.rvClaims.gone()
+                            claimBinding.tvNoData.show()
+                        } else{
+                            claimBinding.rvClaims.show()
+                            claimBinding.tvNoData.gone()
+                            renderList(claims)
+                        }
+                    }
                 }
                 Status.LOADING -> {
                     claimBinding.progressBar.show()

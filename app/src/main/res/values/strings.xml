@@ -8,4 +8,7 @@
     <string name="claim_date_semi_colon">Claim Date : </string>
     <string name="claim_type">Claim Type : </string>
 
+    <string name="field_can_not_empty">Field cannot be empty</string>
+    <string name="please_select_value">Please select value</string>
+    <string name="no_data_found">No data found !</string>
 </resources>

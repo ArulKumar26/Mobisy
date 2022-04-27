@@ -3,13 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/drawable-v24/et_register_bg.xml" value="0.1" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/drawable/et_background.xml" value="0.117" />
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/drawable/et_register_bg.xml" value="0.1" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/activity_claim_item.xml" value="0.1" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/layout_claim_item.xml" value="0.2" />
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/spinner_dropdown_item.xml" value="0.1" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_button.xml" value="0.1" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_edittext.xml" value="0.20989583333333334" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_spinner.xml" value="0.1" />
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_spinner_label.xml" value="0.12182971014492754" />
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_spinner_layout.xml" value="0.12182971014492754" />
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_textinput.xml" value="0.1" />
+        <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_textinput_layout.xml" value="0.1" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/layout/widget_textview.xml" value="0.20989583333333334" />
         <entry key="..\:/ArulData/Projects/MobisyClaims/app/src/main/res/menu/main_menu.xml" value="0.15925925925925927" />
       </map>

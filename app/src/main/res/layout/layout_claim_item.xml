@@ -19,7 +19,7 @@
             android:layout_marginStart="10dp"
             android:padding="10dp"
             android:text="@string/claim_date_semi_colon"
-            android:textColor="@color/black"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
             android:layout_toEndOf="@+id/claim_date_header"
             android:padding="10dp"
             android:text='@{claims.claimDate ?? " - "}'
-            android:textColor="@color/black"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -42,7 +42,7 @@
             android:layout_marginStart="10dp"
             android:padding="10dp"
             android:text="@string/claim_type"
-            android:textColor="@color/black"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -55,7 +55,7 @@
             android:layout_toEndOf="@+id/claim_type_header"
             android:padding="10dp"
             android:text='@{claims.claimType ?? " - "}'
-            android:textColor="@color/black"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
     </RelativeLayout>
