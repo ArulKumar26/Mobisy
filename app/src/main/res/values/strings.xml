@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Mobisy Claims</string>
+
+    <string name="claim_date">Claim Date</string>
+    <string name="add_claim">Add Claim Item</string>
+    <string name="mandatory">%s *</string>
+    <string name="claim_items">Claim Items</string>
+    <string name="claim_date_semi_colon">Claim Date : </string>
+    <string name="claim_type">Claim Type : </string>
+
+</resources>
