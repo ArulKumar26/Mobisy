@@ -43,7 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         mainBinding = binding
         mainViewModel = viewModel
 
-        generateViewsData()
+        mainViewModel.getJsonData()
+        //generateViewsData()
     }
 
     override fun setBindVariable(): Int = BR.viewModel

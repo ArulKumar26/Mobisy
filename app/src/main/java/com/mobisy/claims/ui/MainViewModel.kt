@@ -36,4 +36,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun getClaims(): LiveData<Resource<List<ResultClaimData>>> = claims
+
+    fun getJsonData() {
+        viewModelScope.launch {
+            try {
+                claimRepository.getJsonData("https://jsonplaceholder.typicode.com/users")
+            } catch (error: Exception) {
+                print(error)
+            }
+        }
+
+    }
 }
