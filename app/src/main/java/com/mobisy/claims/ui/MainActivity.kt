@@ -15,11 +15,9 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mobisy.claims.BR
 import com.mobisy.claims.R
 import com.mobisy.claims.data.model.*
+import com.mobisy.claims.data.network.Status
 import com.mobisy.claims.databinding.ActivityMainBinding
-import com.mobisy.claims.extensions.isNullOrEmpty
-import com.mobisy.claims.extensions.launchActivity
-import com.mobisy.claims.extensions.selected
-import com.mobisy.claims.extensions.showMessage
+import com.mobisy.claims.extensions.*
 import com.mobisy.claims.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,8 +41,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         mainBinding = binding
         mainViewModel = viewModel
 
+        setUpObserver()
         mainViewModel.getJsonData()
+
         //generateViewsData()
+    }
+
+    private fun setUpObserver() {
+        mainViewModel.dynamicUiData.observe(this) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                  print(it)
+                }
+                Status.LOADING -> {
+                    print("Loading")
+                }
+                Status.ERROR -> {
+                    print(it)
+                }
+            }
+        }
     }
 
     override fun setBindVariable(): Int = BR.viewModel

@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobisyClaims">
         <activity
+            android:name=".ui.DynamicFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.ClaimItemActivity"
             android:exported="false" />
         <activity
